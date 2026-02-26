@@ -2,8 +2,9 @@ source:
   name: "EPA Facility Registry Service"
   slug: "epa_frs"
   version: "2024"
-  url: "https://www.epa.gov/frs/epa-state-combined-csv-download-files"
+  url: "https://ordsext.epa.gov/FLA/www3/state_files/national_single.zip"
   documentation_url: "https://www.epa.gov/frs"
+  database_schema_version: "1.1.1"
 
 acquisition:
   method: "http_download"
@@ -11,28 +12,81 @@ acquisition:
   compression: "zip"
   auth_required: false
   rate_limit_seconds: 1.0
+  timeout_seconds: 300
 
-scenario: "point"
+# Hybrid scenario: block-coded records use Scenario B, lat/lon fallback uses A
+scenario: "hybrid_block_point"
+primary_scenario: "native_block"    # Records with Census Block Code (field 39)
+fallback_scenario: "point"          # Records with lat/lon only
 
 schema_mapping:
-  lat_column: "LATITUDE83"
-  lon_column: "LONGITUDE83"
+  # Primary key
   id_column: "REGISTRY_ID"
 
+  # Geographic columns
+  lat_column: "LATITUDE83"
+  lon_column: "LONGITUDE83"
+  block_code_column: "CENSUS_BLOCK_CODE"    # 15-digit block GEOID (field 39)
+  fips_column: "FIPS_CODE"                  # 5-digit county FIPS (field 7)
+  tract_column: "CENSUS_TRACT_CODE"         # 6-digit tract code (field 17)
+  state_column: "STATE_CODE"                # 2-letter state code (field 8)
+
+  # Facility attributes
+  name_column: "PRIMARY_NAME"
+  site_type_column: "SITE_TYPE_NAME"
+  programs_column: "PGM_SYS_ACRNMS"        # Pipe-delimited program list (field 25)
+  federal_flag: "FEDERAL_FACILITY_CODE"     # Y/N (field 12)
+  tribal_flag: "TRIBAL_LAND_CODE"           # Y/N (field 14)
+  accuracy_column: "ACCURACY_VALUE"
+
 vintage:
-  geography_year: null
+  geography_year: 2020      # Census Block Code is 2020 vintage
   data_year: 2024
   requires_crosswalk: false
 
 aggregation_rules:
-  facility_count: count
-  unique_programs: count_distinct
+  # Counts
+  frs_facility_count: nunique(registry_id)
+  frs_federal_facility_count: sum(federal_facility_flag)
+  frs_tribal_facility_count: sum(tribal_land_flag)
+
+  # Program flags (boolean OR per BG)
+  frs_has_rcra: any(has_rcra)
+  frs_has_npdes: any(has_npdes)
+  frs_has_air: any(has_air)
+  frs_has_tri: any(has_tri)
+  frs_has_cerclis: any(has_cerclis)
+
+  # Diversity metrics
+  frs_max_program_count: max(program_count)
+  frs_site_type_diversity: nunique(site_type_name)
+  frs_avg_accuracy: mean(accuracy_value)
 
 output:
   name: "epa_frs"
+  filename: "epa_frs_blockgroup.parquet"
   grain: "blockgroup"
+  index_column: "bg_geoid"
+  columns:
+    - bg_geoid
+    - tract_geoid
+    - county_geoid
+    - state_fips
+    - msa_geoid
+    - frs_facility_count
+    - frs_federal_facility_count
+    - frs_tribal_facility_count
+    - frs_has_rcra
+    - frs_has_npdes
+    - frs_has_air
+    - frs_has_tri
+    - frs_has_cerclis
+    - frs_max_program_count
+    - frs_site_type_diversity
+    - frs_avg_accuracy
 
 qa:
-  min_match_rate: 0.85
-  min_coverage_rate: 0.30
-  max_null_rate: 0.15
+  min_match_rate: 0.85        # At least 85% of records should match spine
+  min_coverage_rate: 0.10     # At least 10% of BGs should have at least 1 facility
+  max_null_rate: 0.15         # Max 15% null bg_geoid after join
+  expected_row_range: [200000, 250000]   # ~220K unique BGs with facilities
