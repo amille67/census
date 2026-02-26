@@ -1,0 +1,50 @@
+# ACS Block Group Schema (output)
+# Grain: one row per block group
+# File: data/processed/ingests/{date_tag}/acs_2023_5yr_blockgroup.parquet
+
+table:
+  name: acs_blockgroup
+  grain: block_group
+  join_key: bg_geoid
+
+columns:
+  bg_geoid:
+    type: string
+    length: 12
+    nullable: false
+
+  total_population:
+    type: float64
+    source: "B01001_001E"
+
+  median_household_income:
+    type: float64
+    source: "B19013_001E"
+
+  total_housing_units:
+    type: float64
+    source: "B25001_001E"
+
+  occupied_housing_units:
+    type: float64
+    source: "B25002_002E"
+
+  vacant_housing_units:
+    type: float64
+    source: "B25002_003E"
+
+  median_home_value:
+    type: float64
+    source: "B25077_001E"
+
+  pop_bachelors_or_higher:
+    type: float64
+    source: "B15003_022E + B15003_023E + B15003_025E"
+
+  vacancy_rate:
+    type: float64
+    derived: "vacant_housing_units / total_housing_units"
+
+  pop_density_per_sq_m:
+    type: float64
+    derived: "total_population / net_developable_area_sq_m"

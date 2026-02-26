@@ -1,0 +1,36 @@
+# LODES-derived economic metrics
+
+metrics:
+  simpson_diversity_index:
+    description: >
+      Simpson Diversity Index across NAICS 2-digit sectors.
+      1 - sum(p_i^2) where p_i is sector share of total jobs.
+      Range: 0 (monopoly) to ~0.95 (highly diverse).
+    formula: "1 - sum((CNS_i / C000)^2 for i in 01..20)"
+    inputs: [CNS01, CNS02, CNS03, CNS04, CNS05, CNS06, CNS07, CNS08, CNS09, CNS10,
+             CNS11, CNS12, CNS13, CNS14, CNS15, CNS16, CNS17, CNS18, CNS19, CNS20, C000]
+    output_type: float64
+    null_when: "C000 == 0"
+
+  hachman_index:
+    description: >
+      Hachman Index comparing local NAICS sector distribution to the national average.
+      1.0 = identical to national; lower = more specialized.
+    formula: "1 / sum((local_share_i / national_share_i) * local_share_i)"
+    requires: "national_sector_shares reference table"
+    output_type: float64
+
+  manufacturing_share:
+    description: "Share of total jobs in manufacturing (CNS05)"
+    formula: "CNS05 / C000"
+    output_type: float64
+    null_when: "C000 == 0"
+
+  baumol_risk:
+    description: >
+      Share of employment in sectors with historically low productivity growth
+      (accommodation, other services, public admin).
+    formula: "(CNS18 + CNS19 + CNS20) / C000"
+    sectors: [CNS18, CNS19, CNS20]
+    output_type: float64
+    null_when: "C000 == 0"

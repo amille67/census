@@ -1,0 +1,84 @@
+# Master Spine Crosswalk Schema
+# Grain: one row per 2020 Census block (block_geoid)
+# File: data/processed/spine/master_spine_crosswalk.parquet
+
+table:
+  name: master_spine_crosswalk
+  grain: block
+  primary_key: block_geoid
+  secondary_index: bg_geoid
+  vintage: 2020
+  expected_row_count_range: [8000000, 9000000]
+
+columns:
+  block_geoid:
+    type: string
+    length: 15
+    nullable: false
+    description: "2020 Census block GEOID (primary key)"
+
+  bg_geoid:
+    type: string
+    length: 12
+    nullable: false
+    description: "Block group GEOID derived as block_geoid[:12]"
+
+  tract_geoid:
+    type: string
+    length: 11
+    nullable: false
+    description: "Tract GEOID derived as block_geoid[:11]"
+
+  county_geoid:
+    type: string
+    length: 5
+    nullable: false
+    description: "County FIPS derived as block_geoid[:5]"
+
+  state_fips:
+    type: string
+    length: 2
+    nullable: false
+    description: "State FIPS derived as block_geoid[:2]"
+
+  state_abbr:
+    type: string
+    length: 2
+    nullable: false
+    description: "Two-letter state abbreviation"
+
+  msa_geoid:
+    type: string
+    nullable: true
+    description: "MSA/CBSA GEOID from spatial join of BG centroid"
+
+  mega_region_id:
+    type: string
+    nullable: true
+    description: "Custom mega-region ID from spatial join of BG centroid"
+
+  gross_land_area_sq_m:
+    type: float64
+    nullable: false
+    description: "Total land area of block in square meters (ALAND from TIGER)"
+
+  water_area_sq_m:
+    type: float64
+    nullable: false
+    description: "Water area overlap in square meters"
+
+  protected_area_sq_m:
+    type: float64
+    nullable: false
+    description: "Protected land (PAD-US) overlap in square meters"
+
+  net_developable_area_sq_m:
+    type: float64
+    nullable: false
+    description: "gross_land_area - water_area - protected_area (floored at 0)"
+
+cardinality:
+  block_geoid: unique
+  bg_geoid: many_blocks_per_bg
+  tract_geoid: many_blocks_per_tract
+  county_geoid: many_blocks_per_county

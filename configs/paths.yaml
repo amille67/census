@@ -1,0 +1,68 @@
+# All paths relative to DATA_ROOT (default: ./data)
+
+raw:
+  tiger2020:
+    tabblock20: "raw/tiger2020/tabblock20"
+    blockgroup: "raw/tiger2020/blockgroup"
+    areawater: "raw/tiger2020/areawater"
+    cbsa_msa: "raw/tiger2020/cbsa_msa"
+    states: "raw/tiger2020/states"
+  census_pl_2020:
+    pl_segments: "raw/census_pl_2020/pl_segments"
+    field_layouts: "raw/census_pl_2020/field_layouts"
+  lodes:
+    wac_by_state: "raw/lodes/LODES8/wac/by_state"
+    wac_logs: "raw/lodes/LODES8/wac/logs"
+    wac_extracted: "raw/lodes/LODES8/wac/extracted_csv"
+    rac: "raw/lodes/LODES8/rac"
+    od: "raw/lodes/LODES8/od"
+  census_api:
+    acs5_2023_raw: "raw/census_api/acs5_2023/raw_json"
+    acs5_2023_normalized: "raw/census_api/acs5_2023/normalized_csv"
+    acs5_2023_manifests: "raw/census_api/acs5_2023/manifests"
+  epa_frs:
+    downloads: "raw/epa_frs/downloads"
+    extracted: "raw/epa_frs/extracted"
+  nlcd:
+    rasters: "raw/nlcd/rasters"
+    tiles: "raw/nlcd/tiles"
+  padus:
+    source: "raw/padus/source"
+    extracted: "raw/padus/extracted"
+  crosswalks:
+    nhgis: "raw/crosswalks/nhgis_2010_to_2020_bg"
+    state_fips: "raw/crosswalks/state_fips_lookup"
+
+staging:
+  bootstrap:
+    boundary_outputs: "staging/census_parquet_bootstrap/boundary_outputs"
+    outputs: "staging/census_parquet_bootstrap/outputs"
+    logs: "staging/census_parquet_bootstrap/logs"
+  spatial:
+    tiger_blocks: "staging/spatial/tiger_blocks_2020.parquet"
+    tiger_block_groups: "staging/spatial/tiger_block_groups_2020.parquet"
+    tiger_areawater: "staging/spatial/tiger_areawater_2020.parquet"
+    tiger_msa: "staging/spatial/tiger_msa_2020.parquet"
+    padus_protected: "staging/spatial/padus_protected.parquet"
+    mega_regions: "staging/spatial/mega_regions.parquet"
+  lodes:
+    wac_raw_union: "staging/lodes/wac_raw_union.parquet"
+    wac_block_normalized: "staging/lodes/wac_block_normalized.parquet"
+  census_api:
+    acs_bg_raw: "staging/census_api/acs_bg_raw.parquet"
+    acs_bg_normalized: "staging/census_api/acs_bg_normalized.parquet"
+
+processed:
+  spine:
+    master_crosswalk: "processed/spine/master_spine_crosswalk.parquet"
+    master_crosswalk_metadata: "processed/spine/master_spine_crosswalk.metadata.json"
+    bg_index: "processed/spine/master_spine_bg_index.parquet"
+    build_report: "processed/spine/spine_build_report.json"
+  ingests: "processed/ingests"
+  assembled: "processed/assembled"
+  marts: "processed/marts"
+
+qa:
+  samples: "qa/samples"
+  benchmarks: "qa/benchmarks"
+  snapshots: "qa/snapshots"

@@ -1,0 +1,16 @@
+# Coordinate Reference System configuration
+# All geometry data is standardized to these CRS values.
+
+canonical:
+  geographic: "EPSG:4269"   # NAD83 - Census Bureau standard
+  projected: "EPSG:5070"    # NAD83 / Conus Albers Equal Area - for area calculations
+  web: "EPSG:3857"          # Web Mercator - for visualization outputs
+
+area_calculation_crs: "EPSG:5070"
+spatial_join_crs: "EPSG:4269"
+output_crs: "EPSG:4269"
+
+notes:
+  - "TIGER/Line files are distributed in EPSG:4269 (NAD83)"
+  - "Area calculations must use an equal-area projection (EPSG:5070)"
+  - "census-parquet uses EPSG:3857 for combined outputs; we normalize to EPSG:4269"

@@ -1,0 +1,71 @@
+# Universal Ingest Output Schema
+# All ingest outputs conform to this contract.
+# Grain: one row per block group (bg_geoid)
+# File: data/processed/ingests/{date_tag}/{source_slug}_blockgroup.parquet
+
+table:
+  name: universal_ingest_output
+  grain: block_group
+  join_key: bg_geoid
+  vintage: 2020
+
+required_columns:
+  bg_geoid:
+    type: string
+    length: 12
+    nullable: false
+    description: "Block group GEOID - join key to spine"
+
+  tract_geoid:
+    type: string
+    length: 11
+    nullable: false
+    description: "Tract GEOID from spine hierarchy"
+
+  county_geoid:
+    type: string
+    length: 5
+    nullable: false
+    description: "County FIPS from spine hierarchy"
+
+  state_fips:
+    type: string
+    length: 2
+    nullable: false
+    description: "State FIPS from spine hierarchy"
+
+  msa_geoid:
+    type: string
+    nullable: true
+    description: "MSA GEOID from spine hierarchy"
+
+metadata_columns:
+  _source_slug:
+    type: string
+    nullable: false
+    description: "Source identifier matching source_registry YAML"
+
+  _ingest_timestamp:
+    type: string
+    nullable: false
+    description: "ISO 8601 timestamp of ingest run"
+
+  _source_vintage:
+    type: string
+    nullable: false
+    description: "Data year of the source"
+
+  _geography_vintage:
+    type: int64
+    nullable: false
+    description: "Geography vintage year (must be 2020)"
+
+  _row_count_pre_agg:
+    type: int64
+    nullable: false
+    description: "Number of raw rows before aggregation to BG"
+
+notes:
+  - "Source-specific metric columns are dynamic and defined in source_registry YAML"
+  - "All metric columns must be numeric (int64 or float64)"
+  - "The bg_geoid column is the join key to master_spine_bg_index"

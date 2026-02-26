@@ -1,0 +1,40 @@
+# Metadata Manifest Schema
+# Written alongside every ingest output as {source_slug}_metadata.json
+
+manifest:
+  source_slug:
+    type: string
+    description: "Source identifier"
+  source_version:
+    type: string
+    description: "Source version or vintage"
+  ingest_timestamp:
+    type: string
+    format: "ISO 8601"
+  geography_vintage:
+    type: int64
+    value: 2020
+  scenario:
+    type: string
+    values: [point, native_block, native_bg, raster_polygon]
+  input_row_count:
+    type: int64
+  output_row_count:
+    type: int64
+  match_rate:
+    type: float64
+    description: "Fraction of input rows matched to spine"
+  coverage_rate:
+    type: float64
+    description: "Fraction of BGs with non-null data"
+  null_rates:
+    type: object
+    description: "Per-column null rates for key metrics"
+  output_file:
+    type: string
+    description: "Path to output parquet file"
+  spine_version:
+    type: string
+    description: "Hash/version of the spine used for this ingest"
+  qa_passed:
+    type: boolean

@@ -1,0 +1,40 @@
+# Aggregation rules for rolling up from finer grains to coarser grains.
+
+block_to_blockgroup:
+  method: "groupby bg_geoid"
+  default_agg: sum
+  special_rules:
+    # Area columns: sum to get BG total
+    gross_land_area_sq_m: sum
+    water_area_sq_m: sum
+    protected_area_sq_m: sum
+    net_developable_area_sq_m: sum
+    # Rate/share columns: must be recomputed at BG level, not averaged
+    manufacturing_share: recompute
+    simpson_diversity_index: recompute
+    hachman_index: recompute
+    baumol_risk: recompute
+
+blockgroup_to_tract:
+  method: "groupby tract_geoid"
+  default_agg: sum
+  special_rules:
+    median_household_income: mean
+    median_home_value: mean
+    vacancy_rate: recompute
+
+blockgroup_to_county:
+  method: "groupby county_geoid"
+  default_agg: sum
+  special_rules:
+    median_household_income: mean
+    median_home_value: mean
+    vacancy_rate: recompute
+
+blockgroup_to_msa:
+  method: "groupby msa_geoid"
+  default_agg: sum
+  special_rules:
+    median_household_income: mean
+    median_home_value: mean
+    vacancy_rate: recompute

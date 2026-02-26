@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin libgdal-dev libgeos-dev libproj-dev \
+    wget unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements/base.txt requirements/base.txt
+RUN pip install --no-cache-dir -r requirements/base.txt
+
+COPY . .
+
+ENTRYPOINT ["python", "-m"]
+CMD ["backend.scripts.build_master_spine"]

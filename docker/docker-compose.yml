@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  etl:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.etl
+    volumes:
+      - ../data:/app/data
+      - ../configs:/app/configs
+    env_file:
+      - ../.env
+    environment:
+      - DATA_ROOT=/app/data

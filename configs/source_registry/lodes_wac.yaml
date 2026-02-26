@@ -1,0 +1,62 @@
+source:
+  name: "LODES WAC (Workplace Area Characteristics)"
+  slug: "lodes_wac"
+  version: "LODES8"
+  url: "https://lehd.ces.census.gov/data/lodes/LODES8/"
+  documentation_url: "https://lehd.ces.census.gov/data/lodes/LODES8/LODESTechDoc8.0.pdf"
+
+acquisition:
+  method: "http_download"
+  format: "csv"
+  compression: "gzip"
+  auth_required: false
+  rate_limit_seconds: 0.5
+
+scenario: "native_block"
+
+schema_mapping:
+  block_geoid_column: "w_geocode"
+  geoid_pad_length: 15
+
+vintage:
+  geography_year: 2020
+  data_year: 2021
+  requires_crosswalk: false
+
+aggregation_rules:
+  C000: sum          # Total jobs
+  CA01: sum          # Age 29 or younger
+  CA02: sum          # Age 30 to 54
+  CA03: sum          # Age 55 or older
+  CE01: sum          # Earning $1,250/month or less
+  CE02: sum          # Earning $1,251 to $3,333/month
+  CE03: sum          # Earning more than $3,333/month
+  CNS01: sum         # NAICS Agriculture
+  CNS02: sum         # NAICS Mining
+  CNS03: sum         # NAICS Utilities
+  CNS04: sum         # NAICS Construction
+  CNS05: sum         # NAICS Manufacturing
+  CNS06: sum         # NAICS Wholesale Trade
+  CNS07: sum         # NAICS Retail Trade
+  CNS08: sum         # NAICS Transportation
+  CNS09: sum         # NAICS Information
+  CNS10: sum         # NAICS Finance
+  CNS11: sum         # NAICS Real Estate
+  CNS12: sum         # NAICS Professional Services
+  CNS13: sum         # NAICS Management
+  CNS14: sum         # NAICS Admin/Waste
+  CNS15: sum         # NAICS Education
+  CNS16: sum         # NAICS Healthcare
+  CNS17: sum         # NAICS Arts/Entertainment
+  CNS18: sum         # NAICS Accommodation/Food
+  CNS19: sum         # NAICS Other Services
+  CNS20: sum         # NAICS Public Administration
+
+output:
+  name: "lodes_wac"
+  grain: "blockgroup"
+
+qa:
+  min_match_rate: 0.95
+  min_coverage_rate: 0.70
+  max_null_rate: 0.05
