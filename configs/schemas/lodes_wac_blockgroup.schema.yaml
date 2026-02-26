@@ -1,0 +1,118 @@
+# LODES WAC Block Group Schema (post-aggregation output)
+# Grain: one row per block group
+# File: data/processed/ingests/{date_tag}/lodes_wac_blockgroup.parquet
+
+table:
+  name: lodes_wac_blockgroup
+  grain: block_group
+  join_key: bg_geoid
+
+columns:
+  bg_geoid:
+    type: string
+    length: 12
+    nullable: false
+
+  total_jobs:
+    type: float64
+    source: "sum(C000)"
+    description: "Total jobs in block group"
+
+  jobs_age_29_under:
+    type: float64
+    source: "sum(CA01)"
+  jobs_age_30_54:
+    type: float64
+    source: "sum(CA02)"
+  jobs_age_55_over:
+    type: float64
+    source: "sum(CA03)"
+
+  jobs_earn_low:
+    type: float64
+    source: "sum(CE01)"
+  jobs_earn_mid:
+    type: float64
+    source: "sum(CE02)"
+  jobs_earn_high:
+    type: float64
+    source: "sum(CE03)"
+
+  # NAICS 2-digit sector sums
+  jobs_naics_agriculture:
+    type: float64
+    source: "sum(CNS01)"
+  jobs_naics_mining:
+    type: float64
+    source: "sum(CNS02)"
+  jobs_naics_utilities:
+    type: float64
+    source: "sum(CNS03)"
+  jobs_naics_construction:
+    type: float64
+    source: "sum(CNS04)"
+  jobs_naics_manufacturing:
+    type: float64
+    source: "sum(CNS05)"
+  jobs_naics_wholesale:
+    type: float64
+    source: "sum(CNS06)"
+  jobs_naics_retail:
+    type: float64
+    source: "sum(CNS07)"
+  jobs_naics_transportation:
+    type: float64
+    source: "sum(CNS08)"
+  jobs_naics_information:
+    type: float64
+    source: "sum(CNS09)"
+  jobs_naics_finance:
+    type: float64
+    source: "sum(CNS10)"
+  jobs_naics_real_estate:
+    type: float64
+    source: "sum(CNS11)"
+  jobs_naics_professional:
+    type: float64
+    source: "sum(CNS12)"
+  jobs_naics_management:
+    type: float64
+    source: "sum(CNS13)"
+  jobs_naics_admin:
+    type: float64
+    source: "sum(CNS14)"
+  jobs_naics_education:
+    type: float64
+    source: "sum(CNS15)"
+  jobs_naics_healthcare:
+    type: float64
+    source: "sum(CNS16)"
+  jobs_naics_arts:
+    type: float64
+    source: "sum(CNS17)"
+  jobs_naics_accommodation:
+    type: float64
+    source: "sum(CNS18)"
+  jobs_naics_other:
+    type: float64
+    source: "sum(CNS19)"
+  jobs_naics_public_admin:
+    type: float64
+    source: "sum(CNS20)"
+
+  # Derived metrics
+  simpson_diversity_index:
+    type: float64
+    description: "Simpson diversity index across NAICS sectors"
+  hachman_index:
+    type: float64
+    description: "Hachman index measuring economic diversification"
+  manufacturing_share:
+    type: float64
+    description: "CNS05 / C000"
+  baumol_risk:
+    type: float64
+    description: "Share of employment in sectors with low productivity growth"
+  job_density_per_sq_m:
+    type: float64
+    description: "total_jobs / net_developable_area_sq_m"

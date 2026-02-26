@@ -1,0 +1,13 @@
+project:
+  name: universal-spatial-ingestor
+  version: "1.0.0"
+  description: >
+    Universal Spatial Ingestor: ETL pipeline that maps arbitrary data sources
+    to a rigid 2020 Census master spine at the block group grain.
+
+  vintage: 2020
+  canonical_grain: block_group
+  feature_grain: bg_geoid
+
+  maintainers:
+    - name: Census ETL Team

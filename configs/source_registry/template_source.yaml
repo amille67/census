@@ -1,0 +1,54 @@
+# Template for registering a new data source with the universal ingestor.
+# Copy this file and fill in source-specific values.
+
+source:
+  name: ""                    # Human-readable name
+  slug: ""                    # Machine name (snake_case, used in filenames)
+  version: ""                 # Source version/vintage
+  url: ""                     # Download URL or API endpoint
+  documentation_url: ""       # Link to source documentation
+
+acquisition:
+  method: "http_download"     # http_download | api_fetch | local_file
+  format: "csv"               # csv | shapefile | geojson | geopackage | raster_tif | api_json
+  compression: null           # gzip | zip | null
+  auth_required: false
+  rate_limit_seconds: 0.5
+
+scenario: ""                  # point | native_block | native_bg | raster_polygon
+
+schema_mapping:
+  # For point sources:
+  lat_column: null
+  lon_column: null
+  # For native_block sources:
+  block_geoid_column: null
+  # For native_bg sources:
+  state_column: null
+  county_column: null
+  tract_column: null
+  blockgroup_column: null
+  # For raster sources:
+  band: null
+  nodata_value: null
+
+vintage:
+  geography_year: 2020        # Must be 2020 or requires crosswalk
+  data_year: null             # Year of the actual data content
+  requires_crosswalk: false
+
+aggregation_rules:
+  # Column name -> aggregation method
+  # Methods: sum, mean, median, count, count_distinct, max, min, first
+  # Example:
+  # facility_count: count
+  # total_emissions: sum
+
+output:
+  name: ""                    # Output filename stem (e.g., "epa_frs")
+  grain: "blockgroup"         # Always blockgroup for Build 1
+
+qa:
+  min_match_rate: 0.90        # Minimum % of rows matched to spine
+  min_coverage_rate: 0.50     # Minimum % of BGs with non-null values
+  max_null_rate: 0.10         # Maximum % null in key output columns

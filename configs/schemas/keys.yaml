@@ -1,0 +1,64 @@
+# Canonical key schema for the universal spatial ingestor.
+# All key columns are validated against these specs before any join.
+
+keys:
+  block_geoid:
+    type: string
+    length: 15
+    regex: '^\d{15}$'
+    vintage: 2020
+    semantics: "Census block GEOID (2020 TIGER/PL compatible)"
+    derivation: "Direct from TIGER shapefile GEOID20 or LODES w_geocode"
+    example: "010010201001000"
+    hierarchy_children: [bg_geoid, tract_geoid, county_geoid, state_fips]
+
+  bg_geoid:
+    type: string
+    length: 12
+    regex: '^\d{12}$'
+    vintage: 2020
+    semantics: "Census block group GEOID (2020)"
+    derivation:
+      from_block: "block_geoid[:12]"
+      from_acs_api: "state + county + tract + block_group"
+    example: "010010201001"
+
+  tract_geoid:
+    type: string
+    length: 11
+    regex: '^\d{11}$'
+    vintage: 2020
+    semantics: "Census tract GEOID"
+    derivation: "block_geoid[:11]"
+    example: "01001020100"
+
+  county_geoid:
+    type: string
+    length: 5
+    regex: '^\d{5}$'
+    vintage: 2020
+    semantics: "County FIPS code"
+    derivation: "block_geoid[:5]"
+    example: "01001"
+
+  state_fips:
+    type: string
+    length: 2
+    regex: '^\d{2}$'
+    vintage: 2020
+    semantics: "State FIPS code"
+    derivation: "block_geoid[:2]"
+    example: "01"
+
+  msa_geoid:
+    type: string
+    nullable: true
+    regex: '^\d{5}$'
+    semantics: "CBSA/MSA GEOID"
+    source: "Spatial join of BG centroid to 2020 TIGER MSA/CBSA polygon"
+
+  mega_region_id:
+    type: string
+    nullable: true
+    semantics: "Custom mega-region identifier"
+    source: "Spatial join of BG centroid to custom mega-region polygons"

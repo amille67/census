@@ -1,0 +1,59 @@
+source:
+  name: "American Community Survey 5-Year Estimates (2023)"
+  slug: "acs_5yr_2023"
+  version: "2023"
+  url: "https://api.census.gov/data/2023/acs/acs5"
+  documentation_url: "https://www.census.gov/data/developers/data-sets/acs-5year.html"
+
+acquisition:
+  method: "api_fetch"
+  format: "api_json"
+  compression: null
+  auth_required: true
+  rate_limit_seconds: 0.2
+
+scenario: "native_bg"
+
+schema_mapping:
+  state_column: "state"
+  county_column: "county"
+  tract_column: "tract"
+  blockgroup_column: "block group"
+
+vintage:
+  geography_year: 2020
+  data_year: 2023
+  requires_crosswalk: false
+
+variable_groups:
+  population:
+    - B01001_001E    # Total population
+    - B01001_002E    # Male
+    - B01001_026E    # Female
+  income:
+    - B19013_001E    # Median household income
+    - B19001_001E    # Total households by income bracket
+  housing:
+    - B25001_001E    # Total housing units
+    - B25002_002E    # Occupied
+    - B25002_003E    # Vacant
+    - B25077_001E    # Median home value
+  education:
+    - B15003_001E    # Total population 25+
+    - B15003_022E    # Bachelor's degree
+    - B15003_023E    # Master's degree
+    - B15003_025E    # Doctorate degree
+
+aggregation_rules:
+  B01001_001E: sum
+  B19013_001E: mean
+  B25001_001E: sum
+
+output:
+  name: "acs_2023_5yr"
+  grain: "blockgroup"
+
+qa:
+  min_match_rate: 0.98
+  min_coverage_rate: 0.95
+  max_null_rate: 0.05

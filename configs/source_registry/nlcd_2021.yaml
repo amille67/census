@@ -1,0 +1,57 @@
+source:
+  name: "National Land Cover Database 2021"
+  slug: "nlcd_2021"
+  version: "2021"
+  url: "https://www.mrlc.gov/data"
+  documentation_url: "https://www.mrlc.gov/data/nlcd-2021-land-cover-conus"
+
+acquisition:
+  method: "http_download"
+  format: "raster_tif"
+  compression: "zip"
+  auth_required: false
+  rate_limit_seconds: 2.0
+
+scenario: "raster_polygon"
+
+schema_mapping:
+  band: 1
+  nodata_value: 0
+
+vintage:
+  geography_year: null
+  data_year: 2021
+  requires_crosswalk: false
+
+land_cover_classes:
+  11: "Open Water"
+  21: "Developed, Open Space"
+  22: "Developed, Low Intensity"
+  23: "Developed, Medium Intensity"
+  24: "Developed, High Intensity"
+  31: "Barren Land"
+  41: "Deciduous Forest"
+  42: "Evergreen Forest"
+  43: "Mixed Forest"
+  52: "Shrub/Scrub"
+  71: "Grassland/Herbaceous"
+  81: "Pasture/Hay"
+  82: "Cultivated Crops"
+  90: "Woody Wetlands"
+  95: "Emergent Herbaceous Wetlands"
+
+aggregation_rules:
+  pct_developed: mean
+  pct_impervious: mean
+  pct_forest: mean
+  pct_agriculture: mean
+  pct_water: mean
+
+output:
+  name: "nlcd_2021"
+  grain: "blockgroup"
+
+qa:
+  min_match_rate: 0.95
+  min_coverage_rate: 0.90
+  max_null_rate: 0.05

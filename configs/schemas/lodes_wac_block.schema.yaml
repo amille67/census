@@ -1,0 +1,40 @@
+# LODES WAC Block-level Schema (pre-aggregation)
+# Grain: one row per block x segment x job_type combination
+
+table:
+  name: lodes_wac_block
+  grain: block
+  primary_key: [block_geoid, segment, job_type, year]
+
+columns:
+  block_geoid:
+    type: string
+    length: 15
+    nullable: false
+    source_column: "w_geocode"
+
+  year:
+    type: int64
+    nullable: false
+
+  segment:
+    type: string
+    nullable: false
+    values: [S000, SA01, SA02, SA03, SE01, SE02, SE03, SI01, SI02, SI03]
+
+  job_type:
+    type: string
+    nullable: false
+    values: [JT00, JT01, JT02, JT03, JT04, JT05]
+
+  C000:
+    type: int64
+    description: "Total number of jobs"
+
+  # NAICS sector columns CNS01-CNS20
+  # Age columns CA01-CA03
+  # Earnings columns CE01-CE03
+  # Race columns CR01-CR07
+  # Ethnicity columns CT01-CT02
+  # Education columns CD01-CD04
+  # Sex columns CS01-CS02

@@ -1,0 +1,40 @@
+# Density denominator configuration
+# All density metrics use net_developable_area_sq_m from the spine.
+
+denominators:
+  net_developable_area_sq_m:
+    source: "master_spine_bg_index.net_developable_area_sq_m"
+    unit: "square meters"
+    description: "gross_land_area - water_area - protected_area (floored at 0)"
+    floor_value: 0.0
+    null_handling: "exclude from density calculation"
+
+  gross_land_area_sq_m:
+    source: "master_spine_bg_index.gross_land_area_sq_m_bg"
+    unit: "square meters"
+    description: "Total ALAND from TIGER, summed to BG"
+
+density_metrics:
+  job_density:
+    numerator: "total_jobs"
+    denominator: "net_developable_area_sq_m"
+    unit: "jobs per sq meter"
+    scale_factor: 1000000  # multiply for jobs per sq km
+
+  population_density:
+    numerator: "total_population"
+    denominator: "net_developable_area_sq_m"
+    unit: "persons per sq meter"
+    scale_factor: 1000000
+
+  housing_density:
+    numerator: "total_housing_units"
+    denominator: "net_developable_area_sq_m"
+    unit: "units per sq meter"
+    scale_factor: 1000000
+
+  facility_density:
+    numerator: "facility_count"
+    denominator: "net_developable_area_sq_m"
+    unit: "facilities per sq meter"
+    scale_factor: 1000000

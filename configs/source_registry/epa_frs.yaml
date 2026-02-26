@@ -1,0 +1,38 @@
+source:
+  name: "EPA Facility Registry Service"
+  slug: "epa_frs"
+  version: "2024"
+  url: "https://www.epa.gov/frs/epa-state-combined-csv-download-files"
+  documentation_url: "https://www.epa.gov/frs"
+
+acquisition:
+  method: "http_download"
+  format: "csv"
+  compression: "zip"
+  auth_required: false
+  rate_limit_seconds: 1.0
+
+scenario: "point"
+
+schema_mapping:
+  lat_column: "LATITUDE83"
+  lon_column: "LONGITUDE83"
+  id_column: "REGISTRY_ID"
+
+vintage:
+  geography_year: null
+  data_year: 2024
+  requires_crosswalk: false
+
+aggregation_rules:
+  facility_count: count
+  unique_programs: count_distinct
+
+output:
+  name: "epa_frs"
+  grain: "blockgroup"
+
+qa:
+  min_match_rate: 0.85
+  min_coverage_rate: 0.30
+  max_null_rate: 0.15
